@@ -18,6 +18,7 @@ app.get('/', (req, res) => {
 app.get('/student/:id', (req, res) => {
     const id = Number(req.params.id);
     const student = students.find(s => s.id === id);
+    res.setHeader('X-Custom-Name', 'get student by id');
     res.json(student);
 })
 
@@ -30,6 +31,7 @@ app.post('/student/add', (req, res) => {
         if (err) {
             return res.status(500).json({ message: 'Error saving student data' });
         }
+        res.setHeader('X-Custom-Name', 'add student');
         res.status(201).json({ message: 'Student added successfully', student: newStudent });
     });
 })
@@ -40,7 +42,6 @@ app.patch('/student/:id', (req, res) => {
     const student = students.find(s => s.id === id);
     if(student){
         Object.assign(student,req.body);
-        
         fs.writeFile('./MOCK-DATA.json', JSON.stringify(students, null, 2), (err) => {
             if (err) {
                 return res.status(500).json({ message: 'Error updating student data' });
